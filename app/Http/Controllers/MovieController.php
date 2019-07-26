@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Movie;
+use App\Genre;
 
 class MovieController extends Controller
 {
@@ -17,13 +18,24 @@ class MovieController extends Controller
 
     public function create()
     {
-        //
+        $genres = Genre::all();
+        return view('movies.create', compact('genres'));
     }
 
 
     public function store(Request $request)
     {
-        //
+      $validatedData = $request->validate([
+        'title' => 'required|max:255',
+        'release' => 'required|numeric|between:1900,2019',
+      ]);
+
+      $dati = $request->all();
+      $new_movie = new Movie();
+      $new_movie->fill($dati);
+      $new_movie->save();
+
+      return redirect()->route('movies.index');
     }
 
 
